@@ -48,9 +48,9 @@ const AVAILABLE_PAGES: PagePermission[] = [
 const DEFAULT_ACCOUNTS: UserAccount[] = [
   {
     id: '1',
-    username: 'hajarwbashar',
-    password: '051220219',
-    name: 'المسؤول الرئيسي',
+    username: "hajarwbashar",
+    password: '05122019',
+    name: "hajarwbashar",
     role: 'مدير النظام',
     permissions: AVAILABLE_PAGES.map(p => p.id), // Full access
     createdAt: new Date().toISOString(),
@@ -61,7 +61,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<UserAccount | null>(null);
   const [accounts, setAccounts] = useState<UserAccount[]>(() => {
     const stored = localStorage.getItem('userAccounts');
-    return stored ? JSON.parse(stored) : DEFAULT_ACCOUNTS;
+    let accountsList = stored ? JSON.parse(stored) : DEFAULT_ACCOUNTS;
+    
+    // Always ensure the default admin account exists with correct credentials
+    const adminIndex = accountsList.findIndex((acc: UserAccount) => acc.id === '1');
+    if (adminIndex >= 0) {
+      // Update existing admin account with default values
+      accountsList[adminIndex] = DEFAULT_ACCOUNTS[0];
+    } else {
+      // Add default admin if it doesn't exist
+      accountsList.unshift(DEFAULT_ACCOUNTS[0]);
+    }
+    
+    return accountsList;
   });
 
   useEffect(() => {
