@@ -51,6 +51,7 @@ export interface VoterData {
   block: string;
   district: string;
   center?: string;
+  room?: string;
   elected?: boolean;
   status?: 'none' | 'green' | 'red' | 'yellow';
 }
@@ -248,96 +249,96 @@ const initialMandubs: Mandub[] = [
   { id: 13, name: 'رفيق محمود حسين', block: '3', district: 'جبل محسن', recordNumber: 3004, religion: 'علوي', phoneNumber: '71012345', phoneCardType: 'touch', mandubType: 'مندوب جوال سيارة', representative: 'حسام محمود', sex: 'ذكر' },
   { id: 14, name: 'وليد كريم سليم', block: '3', district: 'القبة', recordNumber: 3005, religion: 'سني', phoneNumber: '71123457', phoneCardType: 'alfa', mandubType: 'رئيس نفوس', representative: 'بلال كريم', sex: 'ذكر' },
   { id: 15, name: 'لينا فارس توفيق', block: '3', district: 'القبة', recordNumber: 3006, religion: 'ماروني', phoneNumber: '71556677', phoneCardType: 'touch', mandubType: 'مندوب ثابت', representative: 'كارلا فارس', sex: 'أنثى' },
-  { id: 16, name: 'سامر رشيد عبد الله', block: '3', district: 'التل', recordNumber: 3007, religion: 'سني', phoneNumber: '71667788', phoneCardType: 'alfa', mandubType: 'مندوب ج��ال', representative: 'رامي رشيد', sex: 'ذكر' },
+  { id: 16, name: 'سامر رشيد عبد الله', block: '3', district: 'التل', recordNumber: 3007, religion: 'سني', phoneNumber: '71667788', phoneCardType: 'alfa', mandubType: 'مندوب جال', representative: 'رامي رشيد', sex: 'ذكر' },
   { id: 17, name: 'مايا حسن صالح', block: '3', district: 'باب الرمل', recordNumber: 3008, religion: 'روم كاثوليك', phoneNumber: '71778899', phoneCardType: 'touch', mandubType: 'مندوب جوال سيار', representative: 'دينا حسن', sex: 'أنثى' },
 ];
 
 const initialVoters: VoterData[] = [
   // Block 1 - المنية - مركز المنية الأول - غرفة 1 (voters 1-500)
-  { id: 1, name: 'محمد علي أحمد', fatherName: 'محمد أحمد', motherName: 'فاطمة محمد', recordNumber: '101', birthday: '1980-01-01', sex: 'ذكر', block: '1', district: 'المنية' },
-  { id: 2, name: 'حسن خليل سعد', fatherName: 'خليل سعد', motherName: 'نورا حسن', recordNumber: '102', birthday: '1985-02-02', sex: 'ذكر', block: '1', district: 'المنية' },
-  { id: 3, name: 'عبد الله كريم', fatherName: 'عبد الله كريم', motherName: 'سميرة عبد الله', recordNumber: '103', birthday: '1990-03-03', sex: 'ذكر', block: '1', district: 'المنية' },
+  { id: 1, name: 'محمد علي أحمد', fatherName: 'محمد أحمد', motherName: 'فاطمة محمد', recordNumber: '101', birthday: '1980-01-01', sex: 'ذكر', block: '1', district: 'المنية', center: 'مركز المنية الأول', room: 'غرفة 1' },
+  { id: 2, name: 'حسن خليل سعد', fatherName: 'خليل سعد', motherName: 'نورا حسن', recordNumber: '102', birthday: '1985-02-02', sex: 'ذكر', block: '1', district: 'المنية', center: 'مركز المنية الأول', room: 'غرفة 1' },
+  { id: 3, name: 'عبد الله كريم', fatherName: 'عبد الله كريم', motherName: 'سميرة عبد الله', recordNumber: '103', birthday: '1990-03-03', sex: 'ذكر', block: '1', district: 'المنية', center: 'مركز المنية الأول', room: 'غرفة 1' },
   
   // Block 1 - المنية - مركز المنية الأول - غرفة 2 (voters 1-500)
-  { id: 4, name: 'سارة حسن محمد', fatherName: 'حسن محمد', motherName: 'نورا حسن', recordNumber: '201', birthday: '1982-04-04', sex: 'أنثى', block: '1', district: 'المنية' },
-  { id: 5, name: 'جورج طوني خليل', fatherName: 'طوني خليل', motherName: 'ماري جورج', recordNumber: '202', birthday: '1987-05-05', sex: 'ذكر', block: '1', district: 'المنية' },
+  { id: 4, name: 'سارة حسن محمد', fatherName: 'حسن محمد', motherName: 'نورا حسن', recordNumber: '201', birthday: '1982-04-04', sex: 'أنثى', block: '1', district: 'المنية', center: 'مركز المنية الأول', room: 'غرفة 2' },
+  { id: 5, name: 'جورج طوني خليل', fatherName: 'طوني خليل', motherName: 'ماري جورج', recordNumber: '202', birthday: '1987-05-05', sex: 'ذكر', block: '1', district: 'المنية', center: 'مركز المنية الأول', room: 'غرفة 2' },
   
   // Block 1 - المنية - مركز المنية الثاني - غرفة 1 (voters 1-450)
-  { id: 6, name: 'علي حسن يوسف', fatherName: 'حسن يوسف', motherName: 'فاطمة محمد', recordNumber: '301', birthday: '1984-06-06', sex: 'ذكر', block: '1', district: 'المنية' },
-  { id: 7, name: 'أحمد فارس عمر', fatherName: 'فارس عمر', motherName: 'ليلى أحمد', recordNumber: '302', birthday: '1989-07-07', sex: 'ذكر', block: '1', district: 'المنية' },
+  { id: 6, name: 'علي حسن يوسف', fatherName: 'حسن يوسف', motherName: 'فاطمة محمد', recordNumber: '301', birthday: '1984-06-06', sex: 'ذكر', block: '1', district: 'المنية', center: 'مركز المنية الثاني', room: 'غرفة 1' },
+  { id: 7, name: 'أحمد فارس عمر', fatherName: 'فارس عمر', motherName: 'ليلى أحمد', recordNumber: '302', birthday: '1989-07-07', sex: 'ذكر', block: '1', district: 'المنية', center: 'مركز المنية الثاني', room: 'غرفة 1' },
   
   // Block 1 - المنية - مركز المنية الثاني - غرفة 2 (voters 1-480)
-  { id: 8, name: 'فاطمة حسن علي', fatherName: 'حسن علي', motherName: 'نورا حسن', recordNumber: '401', birthday: '1986-08-08', sex: 'أنثى', block: '1', district: 'المنية' },
-  { id: 9, name: 'ماريا يوسف سليم', fatherName: 'يوسف سليم', motherName: 'رنا ماريا', recordNumber: '402', birthday: '1991-09-09', sex: 'أنثى', block: '1', district: 'المنية' },
+  { id: 8, name: 'فاطمة حسن علي', fatherName: 'حسن علي', motherName: 'نورا حسن', recordNumber: '401', birthday: '1986-08-08', sex: 'أنثى', block: '1', district: 'المنية', center: 'مركز المنية الثاني', room: 'غرفة 2' },
+  { id: 9, name: 'ماريا يوسف سليم', fatherName: 'يوسف سليم', motherName: 'رنا ماريا', recordNumber: '402', birthday: '1991-09-09', sex: 'أنثى', block: '1', district: 'المنية', center: 'مركز المنية الثاني', room: 'غرفة 2' },
   
   // Block 2 - الضنية - مركز الضنية المركزي - غرفة 1 (voters 1-550)
-  { id: 10, name: 'أحمد خليل حسن', fatherName: 'خليل حسن', motherName: 'ليلى أحمد', recordNumber: '501', birthday: '1983-10-10', sex: 'ذكر', block: '2', district: 'الضنية' },
-  { id: 11, name: 'محمد عبد الرحمن', fatherName: 'عبد الرحمن', motherName: 'خديجة محمد', recordNumber: '502', birthday: '1988-11-11', sex: 'ذكر', block: '2', district: 'الضنية' },
+  { id: 10, name: 'أحمد خليل حسن', fatherName: 'خليل حسن', motherName: 'ليلى أحمد', recordNumber: '501', birthday: '1983-10-10', sex: 'ذكر', block: '2', district: 'الضنية', center: 'مركز الضنية المركزي', room: 'غرفة 1' },
+  { id: 11, name: 'محمد عبد الرحمن', fatherName: 'عبد الرحمن', motherName: 'خديجة محمد', recordNumber: '502', birthday: '1988-11-11', sex: 'ذكر', block: '2', district: 'الضنية', center: 'مركز الضنية المركزي', room: 'غرفة 1' },
   
   // Block 2 - الضنية - مركز الضنية المركزي - غرفة 2 (voters 1-520)
-  { id: 12, name: 'ليلى محمود حسين', fatherName: 'محمد حسين', motherName: 'نور محمود', recordNumber: '601', birthday: '1981-12-12', sex: 'أنثى', block: '2', district: 'الضنية' },
-  { id: 13, name: 'نادين فارس بشارة', fatherName: 'فارس بشارة', motherName: 'سميرة نادين', recordNumber: '602', birthday: '1986-01-13', sex: 'أنثى', block: '2', district: 'الضنية' },
+  { id: 12, name: 'ليلى محمود حسين', fatherName: 'محمد حسين', motherName: 'نور محمود', recordNumber: '601', birthday: '1981-12-12', sex: 'أنثى', block: '2', district: 'الضنية', center: 'مركز الضنية المركزي', room: 'غرفة 2' },
+  { id: 13, name: 'نادين فارس بشارة', fatherName: 'فارس بشارة', motherName: 'سميرة نادين', recordNumber: '602', birthday: '1986-01-13', sex: 'أنثى', block: '2', district: 'الضنية', center: 'مركز الضنية المركزي', room: 'غرفة 2' },
   
   // Block 2 - الضنية - مركز الضنية المركزي - غرفة 3 (voters 1-490)
-  { id: 14, name: 'يوسف عبدو جمال', fatherName: 'عبدو جمال', motherName: 'مريم يوسف', recordNumber: '701', birthday: '1984-02-14', sex: 'ذكر', block: '2', district: 'الضنية' },
-  { id: 15, name: 'كمال سعيد خليل', fatherName: 'سعيد خليل', motherName: 'فاطمة كمال', recordNumber: '702', birthday: '1989-03-15', sex: 'ذكر', block: '2', district: 'الضنية' },
+  { id: 14, name: 'يوسف عبدو جمال', fatherName: 'عبدو جمال', motherName: 'مريم يوسف', recordNumber: '701', birthday: '1984-02-14', sex: 'ذكر', block: '2', district: 'الضنية', center: 'مركز الضنية المركزي', room: 'غرفة 3' },
+  { id: 15, name: 'كمال سعيد خليل', fatherName: 'سعيد خليل', motherName: 'فاطمة كمال', recordNumber: '702', birthday: '1989-03-15', sex: 'ذكر', block: '2', district: 'الضنية', center: 'مركز الضنية المركزي', room: 'غرفة 3' },
   
   // Block 2 - الضنية - مركز الضنية الشرقي - غرفة 1 (voters 1-470)
-  { id: 16, name: 'ريم سعيد أحمد', fatherName: 'سعيد أحمد', motherName: 'هدى سعيد', recordNumber: '801', birthday: '1982-04-16', sex: 'أنثى', block: '2', district: 'الضنية' },
-  { id: 17, name: 'إيلي جورج حداد', fatherName: 'جورج حداد', motherName: 'لطيفة إيلي', recordNumber: '802', birthday: '1987-05-17', sex: 'أنثى', block: '2', district: 'الضنية' },
+  { id: 16, name: 'ريم سعيد أحمد', fatherName: 'سعيد أحمد', motherName: 'هدى سعيد', recordNumber: '801', birthday: '1982-04-16', sex: 'أنثى', block: '2', district: 'الضنية', center: 'مركز الضنية الشرقي', room: 'غرفة 1' },
+  { id: 17, name: 'إيلي جورج حداد', fatherName: 'جورج حداد', motherName: 'لطيفة إيلي', recordNumber: '802', birthday: '1987-05-17', sex: 'أنثى', block: '2', district: 'الضنية', center: 'مركز الضنية الشرقي', room: 'غرفة 1' },
   
   // Block 2 - الضنية - مركز الضنية الشرقي - غرفة 2 (voters 1-510)
-  { id: 18, name: 'خالد جمال طه', fatherName: 'جمال طه', motherName: 'سلمى خالد', recordNumber: '901', birthday: '1985-06-18', sex: 'ذكر', block: '2', district: 'الضنية' },
-  { id: 19, name: 'عمر فيصل عثمان', fatherName: 'فيصل عثمان', motherName: 'نجلاء عمر', recordNumber: '902', birthday: '1990-07-19', sex: 'ذكر', block: '2', district: 'الضنية' },
+  { id: 18, name: 'خالد جمال طه', fatherName: 'جمال طه', motherName: 'سلمى خالد', recordNumber: '901', birthday: '1985-06-18', sex: 'ذكر', block: '2', district: 'الضنية', center: 'مركز الضنية الشرقي', room: 'غرفة 2' },
+  { id: 19, name: 'عمر فيصل عثمان', fatherName: 'فيصل عثمان', motherName: 'نجلاء عمر', recordNumber: '902', birthday: '1990-07-19', sex: 'ذكر', block: '2', district: 'الضنية', center: 'مركز الضنية الشرقي', room: 'غرفة 2' },
   
   // Block 3 - طرابلس - الزاهرية للبنات - غرفة رقم 2 (voters 1-600)
-  { id: 20, name: 'مصطفى خالد', fatherName: 'خالد', motherName: 'أم اختبار', recordNumber: '50', birthday: '1983-08-20', sex: 'ذكر', block: '3', district: 'الزاهرية' },
-  { id: 21, name: 'عائشة محمد رشيد', fatherName: 'محمد رشيد', motherName: 'أمينة عائشة', recordNumber: '51', birthday: '1988-09-21', sex: 'أنثى', block: '3', district: 'الزاهرية' },
-  { id: 22, name: 'زينب عمر كريم', fatherName: 'عمر كريم', motherName: 'سعاد زينب', recordNumber: '52', birthday: '1993-10-22', sex: 'أنثى', block: '3', district: 'الزاهرية' },
+  { id: 20, name: 'مصطفى خالد', fatherName: 'خالد', motherName: 'أم اختبار', recordNumber: '50', birthday: '1983-08-20', sex: 'ذكر', block: '3', district: 'الزاهرية', center: 'مركز باب الرمل', room: 'غرفة 1' },
+  { id: 21, name: 'عائشة محمد رشيد', fatherName: 'محمد رشيد', motherName: 'أمينة عائشة', recordNumber: '51', birthday: '1988-09-21', sex: 'أنثى', block: '3', district: 'الزاهرية', center: 'مركز باب الرمل', room: 'غرفة 1' },
+  { id: 22, name: 'زينب عمر كريم', fatherName: 'عمر كريم', motherName: 'سعاد زينب', recordNumber: '52', birthday: '1993-10-22', sex: 'أنثى', block: '3', district: 'الزاهرية', center: 'مركز باب الرمل', room: 'غرفة 1' },
   
   // Block 3 - طرابلس - مركز باب الرمل - غرفة 1 (voters 1-580)
-  { id: 23, name: 'نور الدين عمر حسن', fatherName: 'عمر حسن', motherName: 'زينب عمر', recordNumber: '1001', birthday: '1981-11-23', sex: 'ذكر', block: '3', district: 'باب الرمل' },
-  { id: 24, name: 'بلال محمود جابر', fatherName: 'محمد جابر', motherName: 'هدى بلال', recordNumber: '1002', birthday: '1986-12-24', sex: 'ذكر', block: '3', district: 'باب الرمل' },
+  { id: 23, name: 'نور الدين عمر حسن', fatherName: 'عمر حسن', motherName: 'زينب عمر', recordNumber: '1001', birthday: '1981-11-23', sex: 'ذكر', block: '3', district: 'باب الرمل', center: 'مركز باب الرمل', room: 'غرفة 1' },
+  { id: 24, name: 'بلال محمود جابر', fatherName: 'محمد جابر', motherName: 'هدى بلال', recordNumber: '1002', birthday: '1986-12-24', sex: 'ذكر', block: '3', district: 'باب الرمل', center: 'مركز باب الرمل', room: 'غرفة 1' },
   
   // Block 3 - طرابلس - مركز باب الرمل - غرفة 2 (voters 1-560)
-  { id: 25, name: 'فادي طوني حداد', fatherName: 'طوني حداد', motherName: 'ماري فادي', recordNumber: '1101', birthday: '1984-01-25', sex: 'ذكر', block: '3', district: 'باب الرمل' },
-  { id: 26, name: 'جوزيف أنطوان عون', fatherName: 'أنطوان عون', motherName: 'ليلى جوزيف', recordNumber: '1102', birthday: '1989-02-26', sex: 'ذكر', block: '3', district: 'باب الرمل' },
+  { id: 25, name: 'فادي طوني حداد', fatherName: 'طوني حداد', motherName: 'ماري فادي', recordNumber: '1101', birthday: '1984-01-25', sex: 'ذكر', block: '3', district: 'باب الرمل', center: 'مركز باب الرمل', room: 'غرفة 2' },
+  { id: 26, name: 'جوزيف أنطوان عون', fatherName: 'أنطوان عون', motherName: 'ليلى جوزيف', recordNumber: '1102', birthday: '1989-02-26', sex: 'ذكر', block: '3', district: 'باب الرمل', center: 'مركز باب الرمل', room: 'غرفة 2' },
   
   // Block 3 - طرابلس - مركز باب الرمل - غرفة 3 (voters 1-540)
-  { id: 27, name: 'رنا كريم سعد', fatherName: 'كريم سعد', motherName: 'سميرة كريم', recordNumber: '1201', birthday: '1982-03-27', sex: 'أنثى', block: '3', district: 'باب الرمل' },
-  { id: 28, name: 'ميشال بطرس سليم', fatherName: 'بطرس سليم', motherName: 'نور ميشال', recordNumber: '1202', birthday: '1987-04-28', sex: 'أنثى', block: '3', district: 'باب الرمل' },
+  { id: 27, name: 'رنا كريم سعد', fatherName: 'كريم سعد', motherName: 'سميرة كريم', recordNumber: '1201', birthday: '1982-03-27', sex: 'أنثى', block: '3', district: 'باب الرمل', center: 'مركز باب الرمل', room: 'غرفة 3' },
+  { id: 28, name: 'ميشال بطرس سليم', fatherName: 'بطرس سليم', motherName: 'نور ميشال', recordNumber: '1202', birthday: '1987-04-28', sex: 'أنثى', block: '3', district: 'باب الرمل', center: 'مركز باب الرمل', room: 'غرفة 3' },
   
   // Block 3 - طرابلس - مركز التل - غرفة 1 (voters 1-590)
-  { id: 29, name: 'وليد فارس خالد', fatherName: 'فارس خالد', motherName: 'ندى فارس', recordNumber: '1301', birthday: '1985-05-29', sex: 'ذكر', block: '3', district: 'التل' },
-  { id: 30, name: 'رامي سمير عبد الله', fatherName: 'سمير عبد الله', motherName: 'لينا رامي', recordNumber: '1302', birthday: '1990-06-30', sex: 'ذكر', block: '3', district: 'التل' },
+  { id: 29, name: 'وليد فارس خالد', fatherName: 'فارس خالد', motherName: 'ندى فارس', recordNumber: '1301', birthday: '1985-05-29', sex: 'ذكر', block: '3', district: 'التل', center: 'مركز التل', room: 'غرفة 1' },
+  { id: 30, name: 'رامي سمير عبد الله', fatherName: 'سمير عبد الله', motherName: 'لينا رامي', recordNumber: '1302', birthday: '1990-06-30', sex: 'ذكر', block: '3', district: 'التل', center: 'مركز التل', room: 'غرفة 1' },
   
   // Block 3 - طرابلس - مركز التل - غرفة 2 (voters 1-570)
-  { id: 31, name: 'دينا رشيد حسن', fatherName: 'رشيد حسن', motherName: 'نادية رشيد', recordNumber: '1401', birthday: '1983-07-01', sex: 'أنثى', block: '3', district: 'التل' },
-  { id: 32, name: 'كارلا ميشال نصر', fatherName: 'ميشال نصر', motherName: 'سوزان كارلا', recordNumber: '1402', birthday: '1988-08-02', sex: 'أنثى', block: '3', district: 'التل' },
+  { id: 31, name: 'دينا رشيد حسن', fatherName: 'رشيد حسن', motherName: 'نادية رشيد', recordNumber: '1401', birthday: '1983-07-01', sex: 'أنثى', block: '3', district: 'التل', center: 'مركز التل', room: 'غرفة 2' },
+  { id: 32, name: 'كارلا ميشال نصر', fatherName: 'ميشال نصر', motherName: 'سوزان كارلا', recordNumber: '1402', birthday: '1988-08-02', sex: 'أنثى', block: '3', district: 'التل', center: 'مركز التل', room: 'غرفة 2' },
   
   // Block 3 - طرابلس - مركز الميناء - غرفة 1 (voters 1-600)
-  { id: 33, name: 'طارق حمدان صالح', fatherName: 'حمدان صالح', motherName: 'رانيا حمدان', recordNumber: '1501', birthday: '1986-09-03', sex: 'ذكر', block: '3', district: 'الميناء' },
-  { id: 34, name: 'حسام عادل محمود', fatherName: 'عادل محمود', motherName: 'فاطمة حسام', recordNumber: '1502', birthday: '1991-10-04', sex: 'ذكر', block: '3', district: 'الميناء' },
+  { id: 33, name: 'طارق حمدان صالح', fatherName: 'حمدان صالح', motherName: 'رانيا حمدان', recordNumber: '1501', birthday: '1986-09-03', sex: 'ذكر', block: '3', district: 'الميناء', center: 'مركز الميناء', room: 'غرفة 1' },
+  { id: 34, name: 'حسام عادل محمود', fatherName: 'عادل محمود', motherName: 'فاطمة حسام', recordNumber: '1502', birthday: '1991-10-04', sex: 'ذكر', block: '3', district: 'الميناء', center: 'مركز الميناء', room: 'غرفة 1' },
   
   // Block 3 - طرابلس - مركز الميناء - غرفة 2 (voters 1-580)
-  { id: 35, name: 'هالة توفيق علي', fatherName: 'توفيق علي', motherName: 'جميلة توفيق', recordNumber: '1601', birthday: '1984-11-05', sex: 'أنثى', block: '3', district: 'جبل محسن' },
-  { id: 36, name: 'رفيق محمد حسين', fatherName: 'محمد حسين', motherName: 'نور رفيق', recordNumber: '1602', birthday: '1989-12-06', sex: 'ذكر', block: '3', district: 'جبل محسن' },
+  { id: 35, name: 'هالة توفيق علي', fatherName: 'توفيق علي', motherName: 'جميلة توفيق', recordNumber: '1601', birthday: '1984-11-05', sex: 'أنثى', block: '3', district: 'جبل محسن', center: 'مركز الميناء', room: 'غرفة 2' },
+  { id: 36, name: 'رفيق محمد حسين', fatherName: 'محمد حسين', motherName: 'نور رفيق', recordNumber: '1602', birthday: '1989-12-06', sex: 'ذكر', block: '3', district: 'جبل محسن', center: 'مركز الميناء', room: 'غرفة 2' },
   
   // Block 3 - طرابلس - مركز الميناء - غرفة 3 (voters 1-550)
-  { id: 37, name: 'سامر نصار جمال', fatherName: 'نصار جمال', motherName: 'فادية نصار', recordNumber: '1701', birthday: '1982-01-07', sex: 'ذكر', block: '3', district: 'الميناء' },
-  { id: 38, name: 'ياسر فوزي عمر', fatherName: 'فوزي عمر', motherName: 'سعاد ياسر', recordNumber: '1702', birthday: '1987-02-08', sex: 'ذكر', block: '3', district: 'الميناء' },
+  { id: 37, name: 'سامر نصار جمال', fatherName: 'نصار جمال', motherName: 'فادية نصار', recordNumber: '1701', birthday: '1982-01-07', sex: 'ذكر', block: '3', district: 'الميناء', center: 'مركز الميناء', room: 'غرفة 3' },
+  { id: 38, name: 'ياسر فوزي عمر', fatherName: 'فوزي عمر', motherName: 'سعاد ياسر', recordNumber: '1702', birthday: '1987-02-08', sex: 'ذكر', block: '3', district: 'الميناء', center: 'مركز الميناء', room: 'غرفة 3' },
   
   // Block 3 - طرابلس - مركز القبة - غرفة 1 (voters 1-595)
-  { id: 39, name: 'لينا قاسم توفيق', fatherName: 'قاسم توفيق', motherName: 'وفاء قاسم', recordNumber: '1801', birthday: '1985-03-09', sex: 'أنثى', block: '3', district: 'القبة' },
-  { id: 40, name: 'سيلين بطرس خوري', fatherName: 'بطرس خوري', motherName: 'ريتا سيلين', recordNumber: '1802', birthday: '1990-04-10', sex: 'أنثى', block: '3', district: 'القبة' },
+  { id: 39, name: 'لينا قاسم توفيق', fatherName: 'قاسم توفيق', motherName: 'وفاء قاسم', recordNumber: '1801', birthday: '1985-03-09', sex: 'أنثى', block: '3', district: 'القبة', center: 'مركز القبة', room: 'غرفة 1' },
+  { id: 40, name: 'سيلين بطرس خوري', fatherName: 'بطرس خوري', motherName: 'ريتا سيلين', recordNumber: '1802', birthday: '1990-04-10', sex: 'أنثى', block: '3', district: 'القبة', center: 'مركز القبة', room: 'غرفة 1' },
   
   // Block 3 - طرابلس - مركز القبة - غرفة 2 (voters 1-575)
-  { id: 41, name: 'عماد شاهين أحمد', fatherName: 'شاهين أحمد', motherName: 'إيمان شاهين', recordNumber: '1901', birthday: '1983-05-11', sex: 'ذكر', block: '3', district: 'القبة' },
-  { id: 42, name: 'طلال عبد الكريم', fatherName: 'عبد الكريم', motherName: 'لبنى طلال', recordNumber: '1902', birthday: '1988-06-12', sex: 'ذكر', block: '3', district: 'القبة' },
+  { id: 41, name: 'عماد شاهين أحمد', fatherName: 'شاهين أحمد', motherName: 'إيمان شاهين', recordNumber: '1901', birthday: '1983-05-11', sex: 'ذكر', block: '3', district: 'القبة', center: 'مركز القبة', room: 'غرفة 2' },
+  { id: 42, name: 'طلال عبد الكريم', fatherName: 'عبد الكريم', motherName: 'لبنى طلال', recordNumber: '1902', birthday: '1988-06-12', sex: 'ذكر', block: '3', district: 'القبة', center: 'مركز القبة', room: 'غرفة 2' },
   
   // Block 3 - طرابلس - مركز القبة - غرفة 3 (voters 1-565)
-  { id: 43, name: 'مايا صالح حسن', fatherName: 'صالح حسن', motherName: 'غادة صالح', recordNumber: '2001', birthday: '1986-07-13', sex: 'أنثى', block: '3', district: 'القبة' },
-  { id: 44, name: 'نينا سمير يوسف', fatherName: 'سمير يوسف', motherName: 'رنا نينا', recordNumber: '2002', birthday: '1991-08-14', sex: 'أنثى', block: '3', district: 'القبة' },
+  { id: 43, name: 'مايا صالح حسن', fatherName: 'صالح حسن', motherName: 'غادة صالح', recordNumber: '2001', birthday: '1986-07-13', sex: 'أنثى', block: '3', district: 'القبة', center: 'مركز القبة', room: 'غرفة 3' },
+  { id: 44, name: 'نينا سمير يوسف', fatherName: 'سمير يوسف', motherName: 'رنا نينا', recordNumber: '2002', birthday: '1991-08-14', sex: 'أنثى', block: '3', district: 'القبة', center: 'مركز القبة', room: 'غرفة 3' },
 ];
 
 export function ElectionProvider({ children }: { children: ReactNode }) {

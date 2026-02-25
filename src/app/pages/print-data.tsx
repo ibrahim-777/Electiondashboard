@@ -25,7 +25,8 @@ export function PrintData() {
   // Filters for Voters
   const [votersBlock, setVotersBlock] = useState<string>('all');
   const [votersDistrict, setVotersDistrict] = useState<string>('all');
-  const [votersStatus, setVotersStatus] = useState<string>('all');
+  const [votersCenter, setVotersCenter] = useState<string>('all');
+  const [votersRoom, setVotersRoom] = useState<string>('all');
   
   // Filters for Cars
   const [carsBlock, setCarsBlock] = useState<string>('all');
@@ -56,8 +57,8 @@ export function PrintData() {
   const filteredVoters = (voters || []).filter(voter => {
     if (votersBlock !== 'all' && voter.block !== votersBlock) return false;
     if (votersDistrict !== 'all' && voter.district !== votersDistrict) return false;
-    if (votersStatus === 'voted' && !voter.elected) return false;
-    if (votersStatus === 'not-voted' && voter.elected) return false;
+    if (votersCenter !== 'all' && voter.center !== votersCenter) return false;
+    if (votersRoom !== 'all' && voter.room !== votersRoom) return false;
     return true;
   });
 
@@ -80,6 +81,27 @@ export function PrintData() {
     return Array.from(new Set(pollingBoxes.filter(pb => pb.block.toString() === block).map(pb => pb.district)));
   };
 
+  // Get unique centers from polling boxes based on block and district
+  const getCentersForDistrict = (block: string, district: string) => {
+    if (!pollingBoxes) return [];
+    if (block === 'all') {
+      return Array.from(new Set(pollingBoxes.map(pb => pb.center)));
+    }
+    if (district === 'all') {
+      return Array.from(new Set(pollingBoxes.filter(pb => pb.block.toString() === block).map(pb => pb.center)));
+    }
+    return Array.from(new Set(pollingBoxes.filter(pb => pb.block.toString() === block && pb.district === district).map(pb => pb.center)));
+  };
+
+  // Get unique rooms from polling boxes
+  const getRoomsForCenter = (center: string) => {
+    if (!pollingBoxes) return [];
+    if (center === 'all') {
+      return Array.from(new Set(pollingBoxes.map(pb => pb.room)));
+    }
+    return Array.from(new Set(pollingBoxes.filter(pb => pb.center === center).map(pb => pb.room)));
+  };
+
   return (
     <div className="p-8">
       {/* Non-printable section */}
@@ -93,7 +115,7 @@ export function PrintData() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5" />
-              إعدادات الطباع��
+              إعدادات الطباع
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -209,12 +231,14 @@ export function PrintData() {
 
               {/* Filters for Voters */}
               {selectedDataType === 'voters' && (
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-4 gap-4">
                   <div>
                     <Label>المنطقة</Label>
                     <Select value={votersBlock} onValueChange={(value) => {
                       setVotersBlock(value);
                       setVotersDistrict('all');
+                      setVotersCenter('all');
+                      setVotersRoom('all');
                     }}>
                       <SelectTrigger>
                         <SelectValue />
@@ -230,7 +254,11 @@ export function PrintData() {
                   {votersBlock !== 'all' && (
                     <div>
                       <Label>المحلة</Label>
-                      <Select value={votersDistrict} onValueChange={setVotersDistrict}>
+                      <Select value={votersDistrict} onValueChange={(value) => {
+                        setVotersDistrict(value);
+                        setVotersCenter('all');
+                        setVotersRoom('all');
+                      }}>
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
@@ -244,15 +272,33 @@ export function PrintData() {
                     </div>
                   )}
                   <div>
-                    <Label>حالة التصويت</Label>
-                    <Select value={votersStatus} onValueChange={setVotersStatus}>
+                    <Label>مركز التصويت</Label>
+                    <Select value={votersCenter} onValueChange={(value) => {
+                      setVotersCenter(value);
+                      setVotersRoom('all');
+                    }}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="all">الكل</SelectItem>
-                        <SelectItem value="voted">صوّت</SelectItem>
-                        <SelectItem value="not-voted">لم يصوّت</SelectItem>
+                        {getCentersForDistrict(votersBlock, votersDistrict).map(center => (
+                          <SelectItem key={center} value={center}>{center}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label>غرفة التصويت</Label>
+                    <Select value={votersRoom} onValueChange={setVotersRoom}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">الكل</SelectItem>
+                        {getRoomsForCenter(votersCenter).map(room => (
+                          <SelectItem key={room} value={room}>{room}</SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -428,6 +474,16 @@ export function PrintData() {
         {/* Voters Table */}
         {selectedDataType === 'voters' && (
           <div className="overflow-x-auto">
+            {/* Show center and room info if selected */}
+            {votersCenter !== 'all' && (
+              <div className="mb-4 text-center">
+                <p className="text-lg font-semibold">
+                  مركز التصويت: {votersCenter}
+                  {votersRoom !== 'all' && ` - غرفة التصويت: ${votersRoom}`}
+                </p>
+              </div>
+            )}
+            
             <table className="w-full border-collapse border border-gray-300">
               <thead>
                 <tr className="bg-gray-100">
@@ -438,7 +494,7 @@ export function PrintData() {
                   <th className="border border-gray-300 py-2 px-4 text-right">المحلة</th>
                   <th className="border border-gray-300 py-2 px-4 text-right">رقم القيد</th>
                   <th className="border border-gray-300 py-2 px-4 text-right">الجنس</th>
-                  <th className="border border-gray-300 py-2 px-4 text-right">حالة التصويت</th>
+                  <th className="border border-gray-300 py-2 px-4 text-right">رقم الناخب</th>
                 </tr>
               </thead>
               <tbody>
@@ -460,9 +516,7 @@ export function PrintData() {
                       <td className="border border-gray-300 py-2 px-4">{voter.district}</td>
                       <td className="border border-gray-300 py-2 px-4">{voter.recordNumber.toLocaleString('ar')}</td>
                       <td className="border border-gray-300 py-2 px-4">{voter.sex}</td>
-                      <td className="border border-gray-300 py-2 px-4">
-                        {voter.elected ? 'صوّت' : 'لم يصوّت'}
-                      </td>
+                      <td className="border border-gray-300 py-2 px-4">{voter.id.toLocaleString('ar')}</td>
                     </tr>
                   ))
                 )}

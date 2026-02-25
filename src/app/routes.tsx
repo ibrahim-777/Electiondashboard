@@ -13,6 +13,19 @@ import { Accounts } from "./pages/accounts";
 import { Login } from "./pages/login";
 import { PrintData } from "./pages/print-data";
 import { Layout } from "./layout";
+import { ElectionProvider } from './context/election-context';
+import { AuthProvider } from './context/auth-context';
+
+// Root component with providers
+function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <AuthProvider>
+      <ElectionProvider>
+        {children}
+      </ElectionProvider>
+    </AuthProvider>
+  );
+}
 
 // Protected layout component that checks authentication
 function ProtectedLayout() {
@@ -22,13 +35,26 @@ function ProtectedLayout() {
     return <Navigate to="/login" replace />;
   }
   
-  return <Layout />;
+  return (
+    <RootLayout>
+      <Layout />
+    </RootLayout>
+  );
+}
+
+// Login wrapper with providers
+function LoginWrapper() {
+  return (
+    <RootLayout>
+      <Login />
+    </RootLayout>
+  );
 }
 
 export const router = createBrowserRouter([
   {
     path: "/login",
-    Component: Login,
+    Component: LoginWrapper,
   },
   {
     path: "/",
