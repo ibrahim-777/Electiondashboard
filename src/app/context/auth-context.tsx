@@ -43,6 +43,7 @@ const AVAILABLE_PAGES: PagePermission[] = [
   { id: 'voter-data', name: 'بيانات الناخبين', path: '/voter-data', enabled: true },
   { id: 'green-list', name: 'القائمة الخضراء', path: '/green-list', enabled: true },
   { id: 'accounts', name: 'إدارة الحسابات', path: '/accounts', enabled: true },
+  { id: 'print', name: 'طباعة البيانات', path: '/print', enabled: true },
 ];
 
 const DEFAULT_ACCOUNTS: UserAccount[] = [

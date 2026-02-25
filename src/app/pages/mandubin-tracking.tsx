@@ -164,6 +164,22 @@ function MandubForm({ formData, setFormData, onSubmit, onCancel, submitText }: M
             </SelectContent>
           </Select>
         </div>
+
+        <div>
+          <Label htmlFor="sex">الجنس</Label>
+          <Select 
+            value={formData.sex} 
+            onValueChange={(value: 'ذكر' | 'أنثى') => setFormData({ ...formData, sex: value })}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ذكر">ذكر</SelectItem>
+              <SelectItem value="أنثى">أنثى</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="flex justify-end gap-2 pt-4">
@@ -192,8 +208,11 @@ export function MandubinTracking() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingMandub, setEditingMandub] = useState<Mandub | null>(null);
   const [showMandubsList, setShowMandubsList] = useState(false);
+  const [showCenterChiefTable, setShowCenterChiefTable] = useState(true);
+  const [showRoomAssignmentTable, setShowRoomAssignmentTable] = useState(true);
+  const [centerChiefAssignments, setCenterChiefAssignments] = useState<{ [centerKey: string]: number }>({});
   
-  const [formData, setFormData] = useState<Omit<Mandub, 'id'>>({
+  const [formData, setFormData] = useState<Omit<Mandub, 'id'>>((({
     name: '',
     block: '1',
     district: '',
@@ -203,13 +222,19 @@ export function MandubinTracking() {
     phoneCardType: 'alfa',
     mandubType: 'مندوب ثابت',
     representative: '',
-  });
+    sex: 'ذكر',
+  } as Omit<Mandub, 'id'>)));
 
   // Filter states
   const [selectedBlockFilter, setSelectedBlockFilter] = useState<string>('all');
   const [selectedDistrictFilter, setSelectedDistrictFilter] = useState<string>('all');
   const [selectedCenterFilter, setSelectedCenterFilter] = useState<string>('all');
   const [searchFilter, setSearchFilter] = useState('');
+
+  // Filter states for center chief table
+  const [chiefBlockFilter, setChiefBlockFilter] = useState<string>('all');
+  const [chiefDistrictFilter, setChiefDistrictFilter] = useState<string>('all');
+  const [chiefCenterFilter, setChiefCenterFilter] = useState<string>('all');
 
   const handleEdit = () => {
     if (editingMandub && formData.name && formData.block && formData.district && formData.recordNumber && formData.religion && formData.phoneNumber && formData.representative) {
@@ -226,6 +251,7 @@ export function MandubinTracking() {
         phoneCardType: 'alfa',
         mandubType: 'مندوب ثابت',
         representative: '',
+        sex: 'ذكر',
       });
       toast.success('تم تحديث بيانات المندوب بنجاح');
     } else {
@@ -245,6 +271,7 @@ export function MandubinTracking() {
       phoneCardType: mandub.phoneCardType,
       mandubType: mandub.mandubType,
       representative: mandub.representative,
+      sex: mandub.sex,
     });
     setIsEditDialogOpen(true);
   };
@@ -270,6 +297,58 @@ export function MandubinTracking() {
         pb.block.toString() === selectedBlockFilter && pb.district === selectedDistrictFilter
       ).map(pb => pb.center)))
     : [];
+
+  // Get unique centers for center chief assignments
+  const uniqueCenters = Array.from(
+    new Set(pollingBoxes.map(pb => `${pb.block}-${pb.district}-${pb.center}`))
+  ).map(key => {
+    const [block, district, center] = key.split('-');
+    const box = pollingBoxes.find(pb => 
+      pb.block.toString() === block && pb.district === district && pb.center === center
+    );
+    return {
+      key,
+      block: parseInt(block),
+      blockName: box?.blockName || '',
+      district,
+      center
+    };
+  });
+
+  // Filter centers for chief assignment
+  const filteredCenters = uniqueCenters.filter(center => {
+    if (chiefBlockFilter !== 'all' && center.block.toString() !== chiefBlockFilter) return false;
+    if (chiefDistrictFilter !== 'all' && center.district !== chiefDistrictFilter) return false;
+    if (chiefCenterFilter !== 'all' && center.center !== chiefCenterFilter) return false;
+    return true;
+  });
+
+  // Get districts and centers for chief filters
+  const chiefDistrictsForBlock = chiefBlockFilter !== 'all'
+    ? Array.from(new Set(uniqueCenters.filter(c => c.block.toString() === chiefBlockFilter).map(c => c.district)))
+    : [];
+  const chiefCentersForDistrict = chiefBlockFilter !== 'all' && chiefDistrictFilter !== 'all'
+    ? Array.from(new Set(uniqueCenters.filter(c => 
+        c.block.toString() === chiefBlockFilter && c.district === chiefDistrictFilter
+      ).map(c => c.center)))
+    : [];
+
+  const handleAssignCenterChief = (centerKey: string, mandubId: number) => {
+    setCenterChiefAssignments(prev => ({
+      ...prev,
+      [centerKey]: mandubId
+    }));
+    toast.success('تم تعيين رئيس المركز بنجاح');
+  };
+
+  const handleUnassignCenterChief = (centerKey: string) => {
+    setCenterChiefAssignments(prev => {
+      const newAssignments = { ...prev };
+      delete newAssignments[centerKey];
+      return newAssignments;
+    });
+    toast.success('تم إزالة رئيس المركز');
+  };
 
   // Get center statistics
   const centerStats = {
@@ -370,165 +449,358 @@ export function MandubinTracking() {
           </Card>
         </div>
 
+        {/* Center Chief Assignment Table */}
+        <Card className="mb-6 border-teal-200">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-teal-600" />
+                تعيين رؤساء المراكز
+              </CardTitle>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setShowCenterChiefTable(!showCenterChiefTable)}
+              >
+                {showCenterChiefTable ? (
+                  <>
+                    <EyeOff className="w-4 h-4 ml-2" />
+                    إخفاء الجدول
+                  </>
+                ) : (
+                  <>
+                    <Eye className="w-4 h-4 ml-2" />
+                    عرض الجدول
+                  </>
+                )}
+              </Button>
+            </div>
+          </CardHeader>
+          {showCenterChiefTable && (
+            <CardContent>
+              {/* Filters */}
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div>
+                  <Label htmlFor="chiefBlockFilter">المنطقة</Label>
+                  <Select value={chiefBlockFilter} onValueChange={setChiefBlockFilter}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="جميع المناطق" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">جميع المناطق</SelectItem>
+                      {blocks.map((block) => (
+                        <SelectItem key={block} value={block.toString()}>
+                          {block === 1 ? 'المنية' : block === 2 ? 'الضنية' : 'طرابلس'}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {chiefBlockFilter !== 'all' && (
+                  <div>
+                    <Label htmlFor="chiefDistrictFilter">المحلة</Label>
+                    <Select value={chiefDistrictFilter} onValueChange={setChiefDistrictFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="جميع المحلات" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">جميع المحلات</SelectItem>
+                        {chiefDistrictsForBlock.map((district) => (
+                          <SelectItem key={district} value={district}>
+                            {district}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                {chiefBlockFilter !== 'all' && chiefDistrictFilter !== 'all' && (
+                  <div>
+                    <Label htmlFor="chiefCenterFilter">المركز</Label>
+                    <Select value={chiefCenterFilter} onValueChange={setChiefCenterFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="جميع المراكز" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">جميع المراكز</SelectItem>
+                        {chiefCentersForDistrict.map((center) => (
+                          <SelectItem key={center} value={center}>
+                            {center}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </div>
+
+              {/* Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-right py-3 px-4">المنطقة</th>
+                      <th className="text-right py-3 px-4">المحلة</th>
+                      <th className="text-right py-3 px-4">المركز</th>
+                      <th className="text-right py-3 px-4">رئيس المركز</th>
+                      <th className="text-right py-3 px-4">رقم الهاتف</th>
+                      <th className="text-right py-3 px-4">كلمة المرور</th>
+                      <th className="text-right py-3 px-4">الإجراءات</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredCenters.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} className="text-center py-8 text-muted-foreground">
+                          لا توجد نتائج
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredCenters.map((center) => {
+                        const assignedChiefId = centerChiefAssignments[center.key];
+                        const assignedChief = assignedChiefId ? mandubs.find(m => m.id === assignedChiefId) : null;
+
+                        return (
+                          <tr key={center.key} className="border-b hover:bg-muted/50 transition-colors">
+                            <td className="py-3 px-4">{center.blockName}</td>
+                            <td className="py-3 px-4">{center.district}</td>
+                            <td className="py-3 px-4">{center.center}</td>
+                            <td className="py-3 px-4">
+                              {assignedChief ? (
+                                <span className="font-medium">{assignedChief.name}</span>
+                              ) : (
+                                <span className="text-muted-foreground">غير معين</span>
+                              )}
+                            </td>
+                            <td className="py-3 px-4 font-mono" dir="ltr">
+                              {assignedChief ? assignedChief.phoneNumber : '-'}
+                            </td>
+                            <td className="py-3 px-4 font-mono" dir="ltr">
+                              {assignedChief ? '123456' : '-'}
+                            </td>
+                            <td className="py-3 px-4">
+                              {assignedChief ? (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="text-red-600 hover:text-red-700"
+                                  onClick={() => handleUnassignCenterChief(center.key)}
+                                >
+                                  <X className="w-4 h-4 ml-1" />
+                                  إزالة
+                                </Button>
+                              ) : (
+                                <Select
+                                  onValueChange={(value) => handleAssignCenterChief(center.key, parseInt(value))}
+                                >
+                                  <SelectTrigger className="w-[200px]">
+                                    <SelectValue placeholder="اختر رئيس مركز" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {mandubs
+                                      .filter(m => m.block === center.block.toString() && m.mandubType === 'رئيس مركز')
+                                      .map((mandub) => (
+                                        <SelectItem key={mandub.id} value={mandub.id.toString()}>
+                                          {mandub.name}
+                                        </SelectItem>
+                                      ))}
+                                  </SelectContent>
+                                </Select>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          )}
+        </Card>
+
         {/* Centers Table */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Building2 className="w-5 h-5" />
-              تعيين المندوبين إلى المراكز والغرف
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center gap-2">
+                <Building2 className="w-5 h-5" />
+                تعيين المندوبين إلى المراكز والغرف
+              </CardTitle>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setShowRoomAssignmentTable(!showRoomAssignmentTable)}
+              >
+                {showRoomAssignmentTable ? (
+                  <>
+                    <EyeOff className="w-4 h-4 ml-2" />
+                    إخفاء الجدول
+                  </>
+                ) : (
+                  <>
+                    <Eye className="w-4 h-4 ml-2" />
+                    عرض الجدول
+                  </>
+                )}
+              </Button>
+            </div>
           </CardHeader>
-          <CardContent>
-            {/* Filters */}
-            <div className="grid grid-cols-3 gap-4 mb-6">
-              <div key="block-filter">
-                <Label htmlFor="blockFilter">المنطقة</Label>
-                <Select value={selectedBlockFilter} onValueChange={setSelectedBlockFilter}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="جميع المناطق" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">جميع المناطق</SelectItem>
-                    {blocks.map((block) => (
-                      <SelectItem key={block} value={block.toString()}>
-                        {block === 1 ? 'المنية' : block === 2 ? 'الضنية' : 'طرابلس'}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {selectedBlockFilter !== 'all' && (
-                <div key="district-filter">
-                  <Label htmlFor="districtFilter">المحلة</Label>
-                  <Select value={selectedDistrictFilter} onValueChange={setSelectedDistrictFilter}>
+          {showRoomAssignmentTable && (
+            <CardContent>
+              {/* Filters */}
+              <div className="grid grid-cols-3 gap-4 mb-6">
+                <div key="block-filter">
+                  <Label htmlFor="blockFilter">المنطقة</Label>
+                  <Select value={selectedBlockFilter} onValueChange={setSelectedBlockFilter}>
                     <SelectTrigger>
-                      <SelectValue placeholder="جميع المحلات" />
+                      <SelectValue placeholder="جميع المناطق" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">جميع المحلات</SelectItem>
-                      {districtsForBlock.map((district) => (
-                        <SelectItem key={district} value={district}>
-                          {district}
+                      <SelectItem value="all">جميع المناطق</SelectItem>
+                      {blocks.map((block) => (
+                        <SelectItem key={block} value={block.toString()}>
+                          {block === 1 ? 'المنية' : block === 2 ? 'الضنية' : 'طرابلس'}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
-              )}
 
-              {selectedBlockFilter !== 'all' && selectedDistrictFilter !== 'all' && (
-                <div key="center-filter">
-                  <Label htmlFor="centerFilter">المركز</Label>
-                  <Select value={selectedCenterFilter} onValueChange={setSelectedCenterFilter}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="جميع المراكز" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">جميع المراكز</SelectItem>
-                      {centersForBlockAndDistrict.map((center) => (
-                        <SelectItem key={center} value={center}>
-                          {center}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                {selectedBlockFilter !== 'all' && (
+                  <div key="district-filter">
+                    <Label htmlFor="districtFilter">المحلة</Label>
+                    <Select value={selectedDistrictFilter} onValueChange={setSelectedDistrictFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="جميع المحلات" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">جميع المحلات</SelectItem>
+                        {districtsForBlock.map((district) => (
+                          <SelectItem key={district} value={district}>
+                            {district}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                {selectedBlockFilter !== 'all' && selectedDistrictFilter !== 'all' && (
+                  <div key="center-filter">
+                    <Label htmlFor="centerFilter">المركز</Label>
+                    <Select value={selectedCenterFilter} onValueChange={setSelectedCenterFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="جميع المراكز" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">جميع المراكز</SelectItem>
+                        {centersForBlockAndDistrict.map((center) => (
+                          <SelectItem key={center} value={center}>
+                            {center}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                <div key="search-filter">
+                  <Label htmlFor="searchFilter">بحث بالإسم</Label>
+                  <Input
+                    id="searchFilter"
+                    placeholder="ابحث عن مندوب..."
+                    value={searchFilter}
+                    onChange={(e) => setSearchFilter(e.target.value)}
+                  />
                 </div>
-              )}
-
-              <div key="search-filter">
-                <Label htmlFor="searchFilter">بحث بالإسم</Label>
-                <Input
-                  id="searchFilter"
-                  placeholder="ابحث عن مندوب..."
-                  value={searchFilter}
-                  onChange={(e) => setSearchFilter(e.target.value)}
-                />
               </div>
-            </div>
 
-            {/* Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-right py-3 px-4">المنطقة</th>
-                    <th className="text-right py-3 px-4">المركز</th>
-                    <th className="text-right py-3 px-4">الغرفة</th>
-                    <th className="text-right py-3 px-4">اسم المندوب</th>
-                    <th className="text-right py-3 px-4">رقم الهاتف</th>
-                    <th className="text-right py-3 px-4">كلمة المرور</th>
-                    <th className="text-right py-3 px-4">اإجراءات</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredPollingBoxes.length === 0 ? (
-                    <tr>
-                      <td colSpan={7} className="text-center py-8 text-muted-foreground">
-                        لا توجد نتائج
-                      </td>
+              {/* Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-right py-3 px-4">المنطقة</th>
+                      <th className="text-right py-3 px-4">المركز</th>
+                      <th className="text-right py-3 px-4">الغرفة</th>
+                      <th className="text-right py-3 px-4">اسم المندوب</th>
+                      <th className="text-right py-3 px-4">رقم الهاتف</th>
+                      <th className="text-right py-3 px-4">كلمة المرور</th>
+                      <th className="text-right py-3 px-4">اإجراءات</th>
                     </tr>
-                  ) : (
-                    filteredPollingBoxes.map((box) => {
-                      const assignment = centerAssignments.find(a => a.roomId === box.id);
-                      const assignedMandub = assignment ? mandubs.find(m => m.id === assignment.mandubId) : null;
+                  </thead>
+                  <tbody>
+                    {filteredPollingBoxes.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} className="text-center py-8 text-muted-foreground">
+                          لا توجد نتائج
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredPollingBoxes.map((box) => {
+                        const assignment = centerAssignments.find(a => a.roomId === box.id);
+                        const assignedMandub = assignment ? mandubs.find(m => m.id === assignment.mandubId) : null;
 
-                      return (
-                        <tr key={box.id} className="border-b hover:bg-muted/50 transition-colors">
-                          <td className="py-3 px-4">{box.blockName}</td>
-                          <td className="py-3 px-4">{box.center}</td>
-                          <td className="py-3 px-4">{box.room}</td>
-                          <td className="py-3 px-4">
-                            {assignedMandub ? (
-                              <span className="font-medium">{assignedMandub.name}</span>
-                            ) : (
-                              <span className="text-muted-foreground">غير معين</span>
-                            )}
-                          </td>
-                          <td className="py-3 px-4 font-mono" dir="ltr">
-                            {assignedMandub ? assignedMandub.phoneNumber : '-'}
-                          </td>
-                          <td className="py-3 px-4 font-mono" dir="ltr">
-                            {assignedMandub ? '123456' : '-'}
-                          </td>
-                          <td className="py-3 px-4">
-                            {assignedMandub ? (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="text-red-600 hover:text-red-700"
-                                onClick={() => handleUnassignMandub(box.id)}
-                              >
-                                <X className="w-4 h-4 ml-1" />
-                                إزالة
-                              </Button>
-                            ) : (
-                              <Select
-                                onValueChange={(value) => handleAssignMandub(box.id, parseInt(value))}
-                              >
-                                <SelectTrigger className="w-[200px]">
-                                  <SelectValue placeholder="اختر مندوب" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {mandubs
-                                    .filter(m => m.block === box.block.toString())
-                                    .map((mandub) => (
-                                      <SelectItem key={mandub.id} value={mandub.id.toString()}>
-                                        {mandub.name}
-                                      </SelectItem>
-                                    ))}
-                                </SelectContent>
-                              </Select>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
+                        return (
+                          <tr key={box.id} className="border-b hover:bg-muted/50 transition-colors">
+                            <td className="py-3 px-4">{box.blockName}</td>
+                            <td className="py-3 px-4">{box.center}</td>
+                            <td className="py-3 px-4">{box.room}</td>
+                            <td className="py-3 px-4">
+                              {assignedMandub ? (
+                                <span className="font-medium">{assignedMandub.name}</span>
+                              ) : (
+                                <span className="text-muted-foreground">غير معين</span>
+                              )}
+                            </td>
+                            <td className="py-3 px-4 font-mono" dir="ltr">
+                              {assignedMandub ? assignedMandub.phoneNumber : '-'}
+                            </td>
+                            <td className="py-3 px-4 font-mono" dir="ltr">
+                              {assignedMandub ? '123456' : '-'}
+                            </td>
+                            <td className="py-3 px-4">
+                              {assignedMandub ? (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="text-red-600 hover:text-red-700"
+                                  onClick={() => handleUnassignMandub(box.id)}
+                                >
+                                  <X className="w-4 h-4 ml-1" />
+                                  إزالة
+                                </Button>
+                              ) : (
+                                <Select
+                                  onValueChange={(value) => handleAssignMandub(box.id, parseInt(value))}
+                                >
+                                  <SelectTrigger className="w-[200px]">
+                                    <SelectValue placeholder="اختر مندوب" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {mandubs
+                                      .filter(m => m.block === box.block.toString())
+                                      .map((mandub) => (
+                                        <SelectItem key={mandub.id} value={mandub.id.toString()}>
+                                          {mandub.name}
+                                        </SelectItem>
+                                      ))}
+                                  </SelectContent>
+                                </Select>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          )}
         </Card>
       </div>
 
@@ -633,14 +905,6 @@ export function MandubinTracking() {
                                 onClick={() => handleDelete(mandub.id)}
                               >
                                 <Trash2 className="w-4 h-4" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="text-green-600 hover:text-green-700"
-                                onClick={() => handleSendPassword(mandub.phoneNumber)}
-                              >
-                                <Send className="w-4 h-4" />
                               </Button>
                             </div>
                           </td>

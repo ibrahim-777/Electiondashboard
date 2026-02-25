@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router';
-import { BarChart3, Plus, Vote, PenSquare, Users, UserCheck, LogOut, Car, FileText, ListChecks, ClipboardCheck, Settings } from 'lucide-react';
+import { BarChart3, Plus, Vote, PenSquare, Users, UserCheck, LogOut, Car, FileText, ListChecks, ClipboardCheck, Settings, Printer } from 'lucide-react';
 import { Toaster } from './components/ui/sonner';
 import { Button } from './components/ui/button';
 import { useAuth } from './context/auth-context';
@@ -216,6 +216,21 @@ export function Layout() {
                 >
                   <Settings className="w-5 h-5" />
                   <span className="font-medium">إدارة الحسابات</span>
+                </div>
+              </Link>
+            )}
+
+            {hasPermission('print') && (
+              <Link to="/print">
+                <div
+                  className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                    location.pathname === '/print'
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                      : 'hover:bg-gray-100 text-gray-700'
+                  }`}
+                >
+                  <Printer className="w-5 h-5" />
+                  <span className="font-medium">طباعة البيانات</span>
                 </div>
               </Link>
             )}

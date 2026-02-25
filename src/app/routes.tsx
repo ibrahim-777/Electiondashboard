@@ -11,6 +11,7 @@ import { GreenList } from "./pages/green-list";
 import { CountingResults } from "./pages/counting-results";
 import { Accounts } from "./pages/accounts";
 import { Login } from "./pages/login";
+import { PrintData } from "./pages/print-data";
 import { Layout } from "./layout";
 
 // Protected layout component that checks authentication
@@ -76,6 +77,10 @@ export const router = createBrowserRouter([
       { 
         path: "accounts", 
         Component: Accounts 
+      },
+      { 
+        path: "print", 
+        Component: PrintData 
       },
     ],
   },
