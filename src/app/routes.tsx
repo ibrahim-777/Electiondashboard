@@ -13,18 +13,41 @@ import { Accounts } from "./pages/accounts";
 import { Login } from "./pages/login";
 import { PrintData } from "./pages/print-data";
 import { Layout } from "./layout";
-import { ElectionProvider } from './context/election-context';
+import { ElectionProvider, useElection } from './context/election-context';
 import { AuthProvider } from './context/auth-context';
+
+// Loading component
+function LoadingScreen() {
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto mb-4"></div>
+        <p className="text-lg text-muted-foreground">جاري تحميل البيانات...</p>
+      </div>
+    </div>
+  );
+}
 
 // Root component with providers
 function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
       <ElectionProvider>
-        {children}
+        <DataLoader>{children}</DataLoader>
       </ElectionProvider>
     </AuthProvider>
   );
+}
+
+// Data loader component that shows loading state
+function DataLoader({ children }: { children: React.ReactNode }) {
+  const { loading } = useElection();
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
+  return <>{children}</>;
 }
 
 // Protected layout component that checks authentication
