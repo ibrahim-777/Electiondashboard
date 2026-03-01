@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
-import { Progress } from '../components/ui/progress';
-import { Button } from '../components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Badge } from './ui/badge';
+import { Progress } from './ui/progress';
+import { Button } from './ui/button';
 import { Clock, TrendingUp, Eye, EyeOff } from 'lucide-react';
 import { useElection } from '../context/election-context';
 
@@ -42,7 +42,7 @@ const blockData = [
   },
 ];
 
-export function CountingResults() {
+export function CountingResultsTab() {
   const { getBlockStatistics } = useElection();
   const [lastUpdate, setLastUpdate] = useState(new Date());
   const [showDetailsTable, setShowDetailsTable] = useState(true);
@@ -62,14 +62,12 @@ export function CountingResults() {
   const votesCounted = totalBoxes > 0 ? (boxesWithVotes / totalBoxes) * 100 : 0;
 
   return (
-    <div className="p-8">
+    <div>
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-3xl mb-2">نتائج الفرز</h1>
-            <p className="text-muted-foreground">تفاصيل عن صناديق الاقتراع وحالة الفرز في كل دائرة</p>
-            <div className="flex items-center gap-2 text-muted-foreground mt-2">
+            <div className="flex items-center gap-2 text-muted-foreground">
               <Clock className="w-4 h-4" />
               <span>آخر تحديث: {lastUpdate.toLocaleTimeString('ar')}</span>
             </div>

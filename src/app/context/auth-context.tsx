@@ -33,7 +33,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AVAILABLE_PAGES: PagePermission[] = [
   { id: 'dashboard', name: 'لوحة النتائج', path: '/', enabled: true },
-  { id: 'counting-results', name: 'نتائج الفرز', path: '/counting-results', enabled: true },
+  { id: 'results', name: 'النتائج والفائزون', path: '/results', enabled: true },
   { id: 'voters', name: 'متابعة الإقتراع', path: '/voters', enabled: true },
   { id: 'edit', name: 'إدخال الأصوات', path: '/edit', enabled: true },
   { id: 'manage', name: 'إدارة القوائم', path: '/manage', enabled: true },

@@ -1,19 +1,33 @@
 import { Outlet, Link, useLocation, useNavigate } from 'react-router';
-import { BarChart3, Plus, Vote, PenSquare, Users, UserCheck, LogOut, Car, FileText, ListChecks, ClipboardCheck, Settings, Printer } from 'lucide-react';
+import { BarChart3, Plus, Vote, PenSquare, Users, UserCheck, LogOut, Car, FileText, ListChecks, ClipboardCheck, Settings, Printer, TrendingUp } from 'lucide-react';
 import { Toaster } from './components/ui/sonner';
 import { Button } from './components/ui/button';
 import { useAuth } from './context/auth-context';
+import { useElection } from './context/election-context';
 import logoImage from 'figma:asset/0fc7eb6146d69b3e4c9199422d7b4c464e50056a.png';
 
 export function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
   const { logout, hasPermission, currentUser } = useAuth();
+  const { loading } = useElection();
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
+
+  // Show loading screen while data is being fetched
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-lg text-muted-foreground">جاري تحميل البيانات...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div dir="rtl" className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex">
@@ -70,17 +84,17 @@ export function Layout() {
               </Link>
             )}
 
-            {hasPermission('counting-results') && (
-              <Link to="/counting-results">
+            {hasPermission('results') && (
+              <Link to="/results">
                 <div
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                    location.pathname === '/counting-results'
+                    location.pathname === '/results'
                       ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
                       : 'hover:bg-gray-100 text-gray-700'
                   }`}
                 >
                   <ClipboardCheck className="w-5 h-5" />
-                  <span className="font-medium">نتائج الفرز</span>
+                  <span className="font-medium">النتائج والفائزون</span>
                 </div>
               </Link>
             )}

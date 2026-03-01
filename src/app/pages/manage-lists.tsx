@@ -175,7 +175,7 @@ export function ManageLists() {
                         <div className="flex gap-4 text-sm text-muted-foreground">
                           <span>الاسم المختصر: {list.shortName}</span>
                           <span>الأصوات: {list.votes.toLocaleString('ar')}</span>
-                          <span>المرشحون: {list.candidates.length}</span>
+                          <span>المرشحون: {list.candidates?list.candidates.length:''}</span>
                         </div>
                       </div>
                     </div>

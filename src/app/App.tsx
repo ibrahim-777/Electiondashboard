@@ -1,6 +1,21 @@
 import { RouterProvider } from 'react-router';
-import { router } from './routes';
+import { createRouter } from './routes';
+import { AuthProvider } from './context/auth-context';
+import { ElectionProvider } from './context/election-context';
+import { useMemo } from 'react';
+
+function AppContent() {
+  const router = useMemo(() => createRouter(), []);
+  
+  return <RouterProvider router={router} />;
+}
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <AuthProvider>
+      <ElectionProvider>
+        <AppContent />
+      </ElectionProvider>
+    </AuthProvider>
+  );
 }

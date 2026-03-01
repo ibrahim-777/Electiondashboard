@@ -48,13 +48,13 @@ function CarForm({ formData, setFormData, onSubmit, onCancel, submitText, mandub
         </div>
 
         <div>
-          <Label htmlFor="owner">المالك</Label>
+          <Label htmlFor="mandubCar">مندوب سيارة</Label>
           <Select 
-            value={formData.owner.toString()} 
-            onValueChange={(value) => setFormData({ ...formData, owner: parseInt(value) })}
+            value={formData.mandubCar.toString()} 
+            onValueChange={(value) => setFormData({ ...formData, mandubCar: parseInt(value) })}
           >
             <SelectTrigger>
-              <SelectValue placeholder="اختر المالك من المندوبين" />
+              <SelectValue placeholder="اختر مندوب سيارة من المندوبين" />
             </SelectTrigger>
             <SelectContent>
               {mandubs.map((mandub) => (
@@ -150,7 +150,7 @@ export function Cars() {
   
   const [formData, setFormData] = useState<Omit<Car, 'id'>>({
     type: '',
-    owner: 0,
+    mandubCar: 0,
     plateNumber: '',
     representative: '',
     isAvailable: true,
@@ -162,11 +162,11 @@ export function Cars() {
   const carMandubs = mandubs.filter(m => m.mandubType === 'مندوب جوال سيارة');
 
   const handleAdd = () => {
-    if (formData.type && formData.owner && formData.plateNumber && formData.representative && formData.block) {
+    if (formData.type && formData.mandubCar && formData.plateNumber && formData.representative && formData.block) {
       addCar(formData);
       setFormData({
         type: '',
-        owner: 0,
+        mandubCar: 0,
         plateNumber: '',
         representative: '',
         isAvailable: true,
@@ -181,13 +181,13 @@ export function Cars() {
   };
 
   const handleEdit = () => {
-    if (editingCar && formData.type && formData.owner && formData.plateNumber && formData.representative && formData.block) {
+    if (editingCar && formData.type && formData.mandubCar && formData.plateNumber && formData.representative && formData.block) {
       updateCar(editingCar.id, formData);
       setIsEditDialogOpen(false);
       setEditingCar(null);
       setFormData({
         type: '',
-        owner: 0,
+        mandubCar: 0,
         plateNumber: '',
         representative: '',
         isAvailable: true,
@@ -204,7 +204,7 @@ export function Cars() {
     setEditingCar(car);
     setFormData({
       type: car.type,
-      owner: car.owner,
+      mandubCar: car.mandubCar,
       plateNumber: car.plateNumber,
       representative: car.representative,
       isAvailable: car.isAvailable,
@@ -398,7 +398,7 @@ export function Cars() {
                       <tr key={car.id} className="border-b hover:bg-muted/50 transition-colors">
                         <td className="py-3 px-4">{car.type}</td>
                         <td className="py-3 px-4 font-mono" dir="ltr">{car.plateNumber}</td>
-                        <td className="py-3 px-4">{getMandubName(car.owner)}</td>
+                        <td className="py-3 px-4">{getMandubName(car.mandubCar)}</td>
                         <td className="py-3 px-4">{car.representative}</td>
                         <td className="py-3 px-4">
                           {car.block === '1' ? 'المنية' : car.block === '2' ? 'الضنية' : 'طرابلس'}
