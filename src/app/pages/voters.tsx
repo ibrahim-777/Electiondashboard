@@ -308,6 +308,7 @@ export function Voters() {
             <table className="w-full">
               <thead>
                 <tr className="border-b">
+                  <th className="text-right py-3 px-4">رقم الناخب</th>
                   <th className="text-right py-3 px-4">الاسم</th>
                   <th className="text-right py-3 px-4">اسم الأب</th>
                   <th className="text-right py-3 px-4">اسم الأم</th>
@@ -322,7 +323,7 @@ export function Voters() {
               <tbody>
                 {filteredVoters.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="text-center py-8 text-muted-foreground">
+                    <td colSpan={10} className="text-center py-8 text-muted-foreground">
                       {voters.length === 0 
                         ? 'لا يوجد ناخبين في النظام' 
                         : 'لا توجد نتائج تطابق البحث'}
@@ -331,6 +332,11 @@ export function Voters() {
                 ) : (
                   filteredVoters.map((voter) => (
                     <tr key={voter.id} className="border-b hover:bg-muted/50 transition-colors">
+                      <td className="py-3 px-4">
+                        <span className="inline-flex items-center justify-center bg-[#0d5963] text-white rounded-md px-2 py-1 text-xs font-semibold">
+                          #{voter.id}
+                        </span>
+                      </td>
                       <td className="py-3 px-4">{voter.name}</td>
                       <td className="py-3 px-4">{voter.fatherName}</td>
                       <td className="py-3 px-4">{voter.motherName}</td>

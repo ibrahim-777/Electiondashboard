@@ -124,9 +124,10 @@ export function Dashboard() {
   const totalBlankVotes = boxVotes.reduce((sum, box) => sum + (box.blankVotes || 0), 0);
   const totalRoomVotes = boxVotes.reduce((sum, box) => sum + (box.totalVotes || 0), 0);
 
-  const totalVotes = partyLists.reduce((sum, list) => sum + list.votes, 0);
-  const unacceptedVotes = totalRejectedVotes || Math.floor(totalVotes * 0.015); // Use real data or fallback to 1.5%
-  const blankPapers = totalBlankVotes || Math.floor(totalVotes * 0.035); // Use real data or fallback to 3.5%
+  // Use room votes if available, otherwise fall back to list votes
+  const totalVotes = totalRoomVotes > 0 ? totalRoomVotes : partyLists.reduce((sum, list) => sum + list.votes, 0);
+  const unacceptedVotes = totalRejectedVotes;
+  const blankPapers = totalBlankVotes;
   const validVotes = totalVotes - unacceptedVotes;
 
   const seatCalculation = calculateSeatAllocation(
@@ -166,50 +167,50 @@ export function Dashboard() {
       <div className="max-w-7xl mx-auto">
         {/* Key Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card>
+          <Card className="border-[#0d5963]/20 bg-[#0d5963]/5">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm">مجموع الأصوات</CardTitle>
-              <Users className="w-4 h-4 text-muted-foreground" />
+              <Users className="w-4 h-4 text-[#0d5963]" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl mb-1">{totalVotes.toLocaleString('ar')}</div>
-              <p className="text-xs text-muted-foreground">أصوات القوائم</p>
+              <div className="text-3xl mb-1 text-[#0d5963]">{totalRoomVotes.toLocaleString('ar')}</div>
+              <p className="text-xs text-muted-foreground">من جميع الغرف</p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-green-200 bg-green-50/50">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm">الأصوات الصحيحة</CardTitle>
-              <TrendingUp className="w-4 h-4 text-muted-foreground" />
+              <TrendingUp className="w-4 h-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl mb-1">{validVotes.toLocaleString('ar')}</div>
+              <div className="text-3xl mb-1 text-green-700">{validVotes.toLocaleString('ar')}</div>
               <p className="text-xs text-muted-foreground">
                 <span className="text-red-600">{unacceptedVotes.toLocaleString('ar')}</span> مرفوض
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-orange-200 bg-orange-50/50">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm">أوراق بيضاء</CardTitle>
-              <Vote className="w-4 h-4 text-muted-foreground" />
+              <Vote className="w-4 h-4 text-orange-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl mb-1">{blankPapers.toLocaleString('ar')}</div>
+              <div className="text-3xl mb-1 text-orange-700">{blankPapers.toLocaleString('ar')}</div>
               <p className="text-xs text-muted-foreground">
-                {((blankPapers / totalVotes) * 100).toFixed(2)}% من المجموع
+                {totalVotes > 0 ? ((blankPapers / totalVotes) * 100).toFixed(2) : 0}% من المجموع
               </p>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-purple-200 bg-purple-50/50">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm">المقاعد الإجمالية</CardTitle>
-              <Award className="w-4 h-4 text-muted-foreground" />
+              <Award className="w-4 h-4 text-purple-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-3xl mb-1">{NUMBER_OF_SEATS}</div>
+              <div className="text-3xl mb-1 text-purple-700">{NUMBER_OF_SEATS}</div>
               <p className="text-xs text-muted-foreground">
                 {seatCalculation.qualifiedLists.length} قائمة مؤهلة
               </p>
@@ -218,9 +219,9 @@ export function Dashboard() {
         </div>
 
         {/* Winning Numbers */}
-        <Card className="mb-8 border-2 border-blue-200 bg-blue-50/50">
+        <Card className="mb-8 border-2 border-[#0d5963]/30 bg-[#0d5963]/5">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-[#0d5963]">
               <Calculator className="w-5 h-5" />
               طريقة الحساب الانتخابي
             </CardTitle>
@@ -229,14 +230,14 @@ export function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="text-lg mb-2">الرقم الانتخابي الأول (العتبة)</h3>
-                <div className="bg-white p-4 rounded-lg border">
+                <div className="bg-white p-4 rounded-lg border border-[#0d5963]/20">
                   <div className="text-sm text-muted-foreground mb-2">
                     (مجموع الأصوات - الأصوات المرفوضة) ÷ عدد المقاعد
                   </div>
                   <div className="text-sm text-muted-foreground mb-2">
                     ({totalVotes.toLocaleString('ar')} - {unacceptedVotes.toLocaleString('ar')}) ÷ {NUMBER_OF_SEATS}
                   </div>
-                  <div className="text-2xl text-blue-600">
+                  <div className="text-2xl text-[#0d5963] font-bold">
                     = {seatCalculation.winningNumber1.toLocaleString('ar', { maximumFractionDigits: 2 })}
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">
@@ -247,14 +248,14 @@ export function Dashboard() {
 
               <div>
                 <h3 className="text-lg mb-2">الرقم الانتخابي الثاني (المقسوم)</h3>
-                <div className="bg-white p-4 rounded-lg border">
+                <div className="bg-white p-4 rounded-lg border border-green-200">
                   <div className="text-sm text-muted-foreground mb-2">
                     (مجموع أصوات القوائم المؤهلة + الأوراق البيضاء) ÷ عدد المقاعد
                   </div>
                   <div className="text-sm text-muted-foreground mb-2">
                     ({seatCalculation.qualifiedLists.reduce((sum, l) => sum + l.votes, 0).toLocaleString('ar')} + {blankPapers.toLocaleString('ar')}) ÷ {NUMBER_OF_SEATS}
                   </div>
-                  <div className="text-2xl text-green-600">
+                  <div className="text-2xl text-green-600 font-bold">
                     = {seatCalculation.winningNumber2.toLocaleString('ar', { maximumFractionDigits: 2 })}
                   </div>
                   <p className="text-xs text-muted-foreground mt-2">

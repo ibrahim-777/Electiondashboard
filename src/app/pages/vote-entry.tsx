@@ -10,10 +10,54 @@ import { CheckCircle2, Save, Edit, X, AlertCircle } from 'lucide-react';
 import { useElection } from '../context/election-context';
 import { toast } from 'sonner';
 
+/**
+ * BACKEND API ENDPOINT IMPLEMENTATION GUIDE
+ * ==========================================
+ * 
+ * To implement the backend for vote entry, create the following endpoints:
+ * 
+ * 1. POST /api/votes/room
+ *    - Purpose: Save or update votes for a specific polling box/room
+ *    - Request Body: {
+ *        boxId: number,
+ *        listVotes: { [listId: number]: number },
+ *        candidateVotes: { [candidateId: number]: number },
+ *        rejectedVotes: number,
+ *        blankVotes: number,
+ *        totalVotes: number
+ *      }
+ *    - Response: { success: boolean, message: string }
+ *    - Example: POST /api/votes/room
+ *      Body: {
+ *        "boxId": 5,
+ *        "listVotes": { "1": 150, "2": 200, "3": 100 },
+ *        "candidateVotes": { "1": 50, "2": 60, "3": 40, ... },
+ *        "rejectedVotes": 5,
+ *        "blankVotes": 10,
+ *        "totalVotes": 465
+ *      }
+ * 
+ * 2. GET /api/votes/room/:boxId
+ *    - Purpose: Retrieve votes for a specific polling box
+ *    - Response: {
+ *        boxId: number,
+ *        listVotes: { [listId: number]: number },
+ *        candidateVotes: { [candidateId: number]: number },
+ *        rejectedVotes: number,
+ *        blankVotes: number,
+ *        totalVotes: number
+ *      } | null
+ *    - Example: GET /api/votes/room/5
+ * 
+ * 3. GET /api/votes/all
+ *    - Purpose: Retrieve all votes from all polling boxes
+ *    - Response: Array of vote objects as shown above
+ */
+
 export function VoteEntry() {
   const { partyLists, pollingBoxes, addBoxVotes, getBoxVotes } = useElection();
   
-  const [selectedBlock, setSelectedBlock] = useState<number | null>(null);
+  const [selectedBlock, setSelectedBlock] = useState<string | null>(null);
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
   const [selectedCenter, setSelectedCenter] = useState<string | null>(null);
   const [selectedBoxId, setSelectedBoxId] = useState<number | null>(null);
@@ -46,8 +90,7 @@ export function VoteEntry() {
     : [];
 
   const handleBlockSelect = (blockId: string) => {
-    const block = parseInt(blockId) as 1 | 2 | 3;
-    setSelectedBlock(block);
+    setSelectedBlock(blockId);
     setSelectedDistrict(null);
     setSelectedCenter(null);
     setSelectedBoxId(null);
@@ -169,9 +212,9 @@ export function VoteEntry() {
   };
 
   // Get the proper block name
-  const getBlockName = (blockNumber: number) => {
-    if (blockNumber === 1) return 'المنية';
-    if (blockNumber === 2) return 'الضنية';
+  const getBlockName = (blockId: string) => {
+    if (blockId === '1') return 'المنية';
+    if (blockId === '2') return 'الضنية';
     return 'طرابلس';
   };
 

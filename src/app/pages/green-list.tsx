@@ -53,9 +53,10 @@ export function GreenList() {
   const stats = useMemo(() => {
     const total = filteredVoters.length;
     const green = filteredVoters.filter(v => v.status === 'green').length;
+    const greenElected = filteredVoters.filter(v => v.status === 'green' && v.elected === true).length;
     const none = filteredVoters.filter(v => !v.status || v.status === 'none').length;
     
-    return { total, green, none };
+    return { total, green, greenElected, none };
   }, [filteredVoters]);
 
   const handleMarkAsGreen = (voterId: number) => {
@@ -83,7 +84,7 @@ export function GreenList() {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-4 gap-4 mb-6">
         <Card className="border-blue-200 bg-blue-50/50">
           <CardHeader className="pb-3">
             <CardTitle className="text-sm flex items-center gap-2">
@@ -105,6 +106,18 @@ export function GreenList() {
           </CardHeader>
           <CardContent>
             <p className="text-3xl">{stats.green.toLocaleString('ar')}</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-emerald-200 bg-emerald-50/50">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm flex items-center gap-2">
+              <Check className="w-4 h-4 text-emerald-600" />
+              أخضر منتخب
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl">{stats.greenElected.toLocaleString('ar')}</p>
           </CardContent>
         </Card>
 

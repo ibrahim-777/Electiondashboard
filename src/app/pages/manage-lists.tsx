@@ -21,7 +21,7 @@ export function ManageLists() {
   // Form states for new candidate
   const [selectedListId, setSelectedListId] = useState<number | null>(null);
   const [newCandidateName, setNewCandidateName] = useState('');
-  const [newCandidateBlock, setNewCandidateBlock] = useState<'1' | '2' | '3'>('3');
+  const [newCandidateBlock, setNewCandidateBlock] = useState<string>('3');
   const [newCandidateReligion, setNewCandidateReligion] = useState('');
 
   const handleAddList = () => {
@@ -62,7 +62,7 @@ export function ManageLists() {
     addCandidate(selectedListId, {
       name: newCandidateName,
       personalVotes: 0,
-      block: parseInt(newCandidateBlock) as 1 | 2 | 3,
+      block: newCandidateBlock,
       religion: newCandidateReligion,
     });
 

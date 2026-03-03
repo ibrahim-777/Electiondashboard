@@ -52,7 +52,7 @@ export function Layout() {
           {/* User Info & Logout */}
           <div className="mb-6 pb-6 border-b">
             {currentUser && (
-              <div className="mb-3 p-3 bg-teal-50 rounded-lg border border-teal-100">
+              <div className="mb-3 p-3 bg-[#0d5963]/10 rounded-lg border border-[#0d5963]/20">
                 <p className="text-sm font-semibold text-gray-900">{currentUser.name}</p>
                 <p className="text-xs text-muted-foreground">{currentUser.role}</p>
               </div>
@@ -74,7 +74,7 @@ export function Layout() {
                 <div
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     location.pathname === '/'
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                      ? 'bg-[#0d5963] text-white shadow-md'
                       : 'hover:bg-gray-100 text-gray-700'
                   }`}
                 >
@@ -89,7 +89,7 @@ export function Layout() {
                 <div
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     location.pathname === '/results'
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                      ? 'bg-[#0d5963] text-white shadow-md'
                       : 'hover:bg-gray-100 text-gray-700'
                   }`}
                 >
@@ -104,7 +104,7 @@ export function Layout() {
                 <div
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     location.pathname === '/voters'
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                      ? 'bg-[#0d5963] text-white shadow-md'
                       : 'hover:bg-gray-100 text-gray-700'
                   }`}
                 >
@@ -119,7 +119,7 @@ export function Layout() {
                 <div
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     location.pathname === '/edit'
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                      ? 'bg-[#0d5963] text-white shadow-md'
                       : 'hover:bg-gray-100 text-gray-700'
                   }`}
                 >
@@ -134,7 +134,7 @@ export function Layout() {
                 <div
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     location.pathname === '/manage'
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                      ? 'bg-[#0d5963] text-white shadow-md'
                       : 'hover:bg-gray-100 text-gray-700'
                   }`}
                 >
@@ -149,7 +149,7 @@ export function Layout() {
                 <div
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     location.pathname === '/mandubin'
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                      ? 'bg-[#0d5963] text-white shadow-md'
                       : 'hover:bg-gray-100 text-gray-700'
                   }`}
                 >
@@ -164,7 +164,7 @@ export function Layout() {
                 <div
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     location.pathname === '/mandubin-tracking'
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                      ? 'bg-[#0d5963] text-white shadow-md'
                       : 'hover:bg-gray-100 text-gray-700'
                   }`}
                 >
@@ -179,7 +179,7 @@ export function Layout() {
                 <div
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     location.pathname === '/cars'
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                      ? 'bg-[#0d5963] text-white shadow-md'
                       : 'hover:bg-gray-100 text-gray-700'
                   }`}
                 >
@@ -194,7 +194,7 @@ export function Layout() {
                 <div
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     location.pathname === '/voter-data'
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                      ? 'bg-[#0d5963] text-white shadow-md'
                       : 'hover:bg-gray-100 text-gray-700'
                   }`}
                 >
@@ -209,7 +209,7 @@ export function Layout() {
                 <div
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     location.pathname === '/green-list'
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                      ? 'bg-[#0d5963] text-white shadow-md'
                       : 'hover:bg-gray-100 text-gray-700'
                   }`}
                 >
@@ -224,7 +224,7 @@ export function Layout() {
                 <div
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     location.pathname === '/accounts'
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                      ? 'bg-[#0d5963] text-white shadow-md'
                       : 'hover:bg-gray-100 text-gray-700'
                   }`}
                 >
@@ -239,7 +239,7 @@ export function Layout() {
                 <div
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                     location.pathname === '/print'
-                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md'
+                      ? 'bg-[#0d5963] text-white shadow-md'
                       : 'hover:bg-gray-100 text-gray-700'
                   }`}
                 >

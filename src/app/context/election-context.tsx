@@ -14,7 +14,7 @@ export interface Candidate {
   id: number;
   name: string;
   personalVotes: number;
-  block: 1 | 2 | 3;
+  block: string;
   religion: string;
   rank?: number;
   wonSeat?: boolean;
@@ -32,7 +32,7 @@ export interface PartyList {
 export interface PollingBox {
   id: number;
   name: string;
-  block: 1 | 2 | 3;
+  block: string;
   blockName: string;
   center: string;
   room: string;
